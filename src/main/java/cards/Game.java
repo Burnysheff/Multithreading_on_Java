@@ -26,22 +26,6 @@ public class Game {
     }
 
     /**
-     * A method for entering numbers of honest players and cheaters (is called twice)
-     * @param in - Scanner for entering an element
-     * @param areHonest - string of 2 conditions ("honest" or "cheater") for putting the right string on the console
-     * @return the number of players
-     * */
-    private static int enterPlayers(Scanner in, String areHonest) {
-        System.out.println("\nEnter the number of " + areHonest + " players (at least 1 and no more than 1000)");
-        String check = in.next();
-        while (!checkInt(check) || Integer.parseInt(check) < 0 ) {
-            System.out.println("Please enter a correct integer number (> 0 and < 1001)!");
-            check = in.next();
-        }
-        return Integer.parseInt(check);
-    }
-
-    /**
      * A method for starting the threads
      * @param cheaters - an array of cheaters threads
      * @param honest - an array of honest threads
@@ -104,10 +88,30 @@ public class Game {
         }
     }
 
+    private static boolean checkCLI(String[] args) {
+        if (!checkInt(args[0]) || !checkInt(args[1])) {
+            return false;
+        }
+        if (Integer.parseInt(args[0]) < 1 || Integer.parseInt(args[0]) > 1000) {
+            return false;
+        }
+        if (Integer.parseInt(args[1]) < 1 || Integer.parseInt(args[1]) > 1000) {
+            return false;
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        int honestPlayersNumber = enterPlayers(in, "honest");
-        int cheatersNumber = enterPlayers(in, "cheater");
+        if (args.length != 2) {
+            System.out.println("\nWrong number of arguments!\n");
+            return;
+        }
+        if(!checkCLI(args)) {
+            System.out.println("\nNumbers should be integers between 1 and 1000!\n");
+            return;
+        }
+        int honestPlayersNumber = Integer.parseInt(args[0]);
+        int cheatersNumber = Integer.parseInt(args[1]);
         // arrays for threads
         Thread[] honestPlayers = new Thread[honestPlayersNumber];
         Thread[] cheater = new Thread[cheatersNumber];
